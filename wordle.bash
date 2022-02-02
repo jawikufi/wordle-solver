@@ -77,7 +77,7 @@ function _menu {
 
 		3)
 			# exclude pattern
-			read -p " [3 of 5] Exclude Pattern (e.g. .i..s): " exclude_pattern
+			read -p " [3 of 5] Exclude Pattern (e.g. ....s): " exclude_pattern
 			if [[ $exclude_pattern != "" ]]
 			then
 				grep -v "$exclude_pattern" $PATH_SRC/word > $PATH_SRC/word2
