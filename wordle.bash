@@ -12,11 +12,11 @@ function _menu {
 	echo " 0 Exit "
 	echo " "		
 
-	echo " 1 New"
-	echo " 2 Exclude"
-	echo " 3 Exclude Pattern"
-	echo " 4 Include"
-	echo " 5 Include Pattern"
+	echo " 1 Length"
+	echo " 2 Exclude (Grey)"
+	echo " 3 Exclude Pattern (Grey / Yellow)"
+	echo " 4 Include (Yellow)"
+	echo " 5 Include Pattern (Green)"
 	echo " "	
 	read -rp " [$name] Please select an option: " inputMenu
 
@@ -28,7 +28,7 @@ function _menu {
 
 		1)
 			# length
-			read -p " [1 of 5] Length (2-46): [5] " length
+			read -p " [Length] 2-46 : [5] " length
 			length=${length:-5}
 
 			if [[ -n ${length//[0-9]/} ]]
@@ -53,7 +53,9 @@ function _menu {
 			grep "^$pattern$" $PATH_SRC/$DICTIONARY > $PATH_SRC/word
 
 			echo ""
-			sort -R $PATH_SRC/word | head -n10
+			sort -R $PATH_SRC/word | head -n20
+			echo ""
+			< $PATH_SRC/word wc -w
 			echo ""
 
 			_menu
@@ -61,7 +63,7 @@ function _menu {
 
 		2)
 			# exclude
-			read -p " [2 of 5] Exclude: " exclude
+			read -p " [Exclude] e.g. roe : " exclude
 			if [[ $exclude != "" ]]
 			then
 				grep -v "[$exclude]" $PATH_SRC/word > $PATH_SRC/word2
@@ -69,7 +71,9 @@ function _menu {
 			fi
 
 			echo ""
-			sort -R $PATH_SRC/word | head -n10
+			sort -R $PATH_SRC/word | head -n20
+			echo ""
+			< $PATH_SRC/word wc -w
 			echo ""
 
 			_menu
@@ -77,15 +81,35 @@ function _menu {
 
 		3)
 			# exclude pattern
-			read -p " [3 of 5] Exclude Pattern (e.g. ....s): " exclude_pattern
+			l=0
+			read -p " [Exclude Pattern] e.g. ....s : " exclude_pattern
 			if [[ $exclude_pattern != "" ]]
 			then
-				grep -v "$exclude_pattern" $PATH_SRC/word > $PATH_SRC/word2
-				cp $PATH_SRC/word2 $PATH_SRC/word
+				for (( i = 0; i < ${#exclude_pattern}; i++ ))
+				do
+					j="${exclude_pattern:$i:1}"
+					dot='....'
+
+					if [[ $i == 0 ]]
+					then
+						result="$j...."							
+
+					else 
+						result=`echo "$dot" | sed "s/./&$j/$i"`
+					fi
+
+					if [[ $result != "....." ]]
+					then
+						grep -v "$result" $PATH_SRC/word > $PATH_SRC/word2
+						cp $PATH_SRC/word2 $PATH_SRC/word
+					fi
+				done
 			fi
 
 			echo ""
-			sort -R $PATH_SRC/word | head -n10
+			sort -R $PATH_SRC/word | head -n20
+			echo ""
+			< $PATH_SRC/word wc -w
 			echo ""
 
 			_menu
@@ -93,7 +117,7 @@ function _menu {
 
 		4)
 			# include
-			read -p " [4 of 5] Include: " include
+			read -p " [Include] e.g. sta : " include
 			if [[ $include != "" ]]
 			then
 				for (( i = 0; i < ${#include}; i++ ))
@@ -104,7 +128,9 @@ function _menu {
 			fi
 
 			echo ""
-			sort -R $PATH_SRC/word | head -n10
+			sort -R $PATH_SRC/word | head -n20
+			echo ""
+			< $PATH_SRC/word wc -w
 			echo ""
 
 			_menu
@@ -112,7 +138,7 @@ function _menu {
 
 		5)
 			# include pattern
-			read -p " [5 of 5] Include Pattern (e.g. .oun.): " include_pattern
+			read -p " [Include Pattern] e.g. sta.. : " include_pattern
 			if [[ $include_pattern != "" ]]
 			then
 				grep "$include_pattern" $PATH_SRC/word > $PATH_SRC/word2
@@ -120,7 +146,9 @@ function _menu {
 			fi
 
 			echo ""
-			sort -R $PATH_SRC/word | head -n10
+			sort -R $PATH_SRC/word | head -n20
+			echo ""
+			< $PATH_SRC/word wc -w
 			echo ""
 
 			_menu
@@ -133,4 +161,5 @@ function _menu {
 	esac
 }
 
+clear
 _menu
