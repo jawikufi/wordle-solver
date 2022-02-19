@@ -14,7 +14,7 @@ function _menu {
 
 	if [[ -z "$length" ]]
 	then
-	    length=46
+	    length=5
 	fi
 
 	if [[ -z "$exclude" ]]
@@ -47,6 +47,20 @@ function _menu {
 
 	case $inputMenu in 
 		0|00)
+			# exit
+			length=5
+			
+			pattern=''
+			str='[a-z]'
+			for (( i = 1; i <= $length; i++ )) 
+			do
+				pattern="${pattern}${str}"
+			done
+
+			touch $PATH_SRC/word
+			touch $PATH_SRC/word2
+			grep "^$pattern$" $PATH_SRC/$DICTIONARY > $PATH_SRC/word
+
 			clear
 			exit
 		;;
@@ -91,7 +105,14 @@ function _menu {
 			read -p " [Exclude] e.g. roe : " answer
 			if [[ $answer != "" ]]
 			then
-				exclude="$exclude$answer"
+				if [[ -z "$exclude" ]]
+				then
+				    exclude="$answer"
+
+				else 
+					exclude="$exclude$answer"
+				fi
+
 				grep -v "[$exclude]" $PATH_SRC/word > $PATH_SRC/word2
 				cp $PATH_SRC/word2 $PATH_SRC/word
 			fi
@@ -111,7 +132,13 @@ function _menu {
 			read -p " [Exclude Pattern] e.g. ....s : " answer
 			if [[ $answer != "" ]]
 			then
-				exclude_pattern="$exclude_pattern $answer"
+				if [[ -z "$exclude_pattern" ]]
+				then
+				    exclude_pattern="$answer"
+
+				else 
+					exclude_pattern="$exclude_pattern $answer"
+				fi
 
 				for (( i = 0; i < ${#answer}; i++ ))
 				do
@@ -148,7 +175,13 @@ function _menu {
 			read -p " [Include] e.g. roe : " answer
 			if [[ $answer != "" ]]
 			then
-				include="$include$answer"
+				if [[ -z "$include" ]]
+				then
+				    include="$answer"
+
+				else 
+					include="$include$answer"
+				fi
 
 				for (( i = 0; i < ${#include}; i++ ))
 				do
@@ -171,7 +204,13 @@ function _menu {
 			read -p " [Include Pattern] e.g. sta.. : " answer
 			if [[ $answer != "" ]]
 			then
-				include_pattern="$include_pattern $answer"
+				if [[ -z "$include_pattern" ]]
+				then
+				    include_pattern="$answer"
+
+				else 
+					include_pattern="$include_pattern $answer"
+				fi
 
 				grep "$answer" $PATH_SRC/word > $PATH_SRC/word2
 				cp $PATH_SRC/word2 $PATH_SRC/word
@@ -187,6 +226,12 @@ function _menu {
 		;;
 
 		*) 
+		echo ""
+		sort -R $PATH_SRC/word | head -n20
+		echo ""
+		< $PATH_SRC/word wc -w
+		echo ""
+
 		_menu
 		;;
 	
