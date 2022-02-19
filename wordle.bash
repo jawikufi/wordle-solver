@@ -12,11 +12,36 @@ function _menu {
 	echo " 0 Exit "
 	echo " "		
 
-	echo " 1 Length"
-	echo " 2 Exclude (Grey)"
-	echo " 3 Exclude Pattern (Grey / Yellow)"
-	echo " 4 Include (Yellow)"
-	echo " 5 Include Pattern (Green)"
+	if [[ -z "$length" ]]
+	then
+	    length=46
+	fi
+
+	if [[ -z "$exclude" ]]
+	then
+	    exclude=
+	fi
+
+	if [[ -z "$exclude_pattern" ]]
+	then
+	    exclude_pattern=
+	fi
+
+	if [[ -z "$include" ]]
+	then
+	    include=
+	fi
+
+	if [[ -z "$include_pattern" ]]
+	then
+	    include_pattern=
+	fi
+
+	echo " 1 Length [$length] "
+	echo " 2 Exclude (Grey) [$exclude] "
+	echo " 3 Exclude Pattern (Grey / Yellow) [$exclude_pattern] "
+	echo " 4 Include (Yellow) [$include] "
+	echo " 5 Include Pattern (Green) [$include_pattern] "
 	echo " "	
 	read -rp " [$name] Please select an option: " inputMenu
 
@@ -63,9 +88,10 @@ function _menu {
 
 		2)
 			# exclude
-			read -p " [Exclude] e.g. roe : " exclude
-			if [[ $exclude != "" ]]
+			read -p " [Exclude] e.g. roe : " answer
+			if [[ $answer != "" ]]
 			then
+				exclude="$exclude$answer"
 				grep -v "[$exclude]" $PATH_SRC/word > $PATH_SRC/word2
 				cp $PATH_SRC/word2 $PATH_SRC/word
 			fi
@@ -82,12 +108,14 @@ function _menu {
 		3)
 			# exclude pattern
 			l=0
-			read -p " [Exclude Pattern] e.g. ....s : " exclude_pattern
-			if [[ $exclude_pattern != "" ]]
+			read -p " [Exclude Pattern] e.g. ....s : " answer
+			if [[ $answer != "" ]]
 			then
-				for (( i = 0; i < ${#exclude_pattern}; i++ ))
+				exclude_pattern="$exclude_pattern $answer"
+
+				for (( i = 0; i < ${#answer}; i++ ))
 				do
-					j="${exclude_pattern:$i:1}"
+					j="${answer:$i:1}"
 					dot='....'
 
 					if [[ $i == 0 ]]
@@ -117,9 +145,11 @@ function _menu {
 
 		4)
 			# include
-			read -p " [Include] e.g. sta : " include
-			if [[ $include != "" ]]
+			read -p " [Include] e.g. roe : " answer
+			if [[ $answer != "" ]]
 			then
+				include="$include$answer"
+
 				for (( i = 0; i < ${#include}; i++ ))
 				do
 					grep "${include:$i:1}" $PATH_SRC/word > $PATH_SRC/word2
@@ -138,10 +168,12 @@ function _menu {
 
 		5)
 			# include pattern
-			read -p " [Include Pattern] e.g. sta.. : " include_pattern
-			if [[ $include_pattern != "" ]]
+			read -p " [Include Pattern] e.g. sta.. : " answer
+			if [[ $answer != "" ]]
 			then
-				grep "$include_pattern" $PATH_SRC/word > $PATH_SRC/word2
+				include_pattern="$include_pattern $answer"
+
+				grep "$answer" $PATH_SRC/word > $PATH_SRC/word2
 				cp $PATH_SRC/word2 $PATH_SRC/word
 			fi
 
