@@ -112,9 +112,41 @@ function _menu {
 			x=1
 			while [ $x -le 6 ]
 			do
-
 				read -p " [Input] e.g. lieus : " answer
+				while [[ "$answer" =~ [^a-zA-Z] || -z "$answer" ]]
+				do        
+				   	echo "Input only alphabet characters"     
+				   	   
+					read -p " [Input] e.g. lieus : " answer
+				done
+
+				while [[ ${#answer} -gt $length || ${#answer} -lt $length ]]
+				do        
+				   	echo "Input only $length length"     
+				   	   
+					read -p " [Input] e.g. lieus : " answer
+				done
+
 				read -p " [Color] e.g. 01000 : " answer2
+				while [[ "$answer2" =~ [^012] || -z "$answer2" ]]
+				do        
+				   	echo "Input only number characters 0 to 2"     
+				   	   
+					read -p " [Color] e.g. 01000 : " answer2
+				done
+
+				while [[ ${#answer2} -gt $length || ${#answer2} -lt $length ]]
+				do        
+				   	echo "Input only $length length"     
+				   	   
+					read -p " [Color] e.g. 01000 : " answer2
+				done
+
+				if [[ $answer != "" && $answer2 == "22222" ]]
+				then
+					echo "You're the man!"
+					exit
+				fi
 
 				if [[ $answer != "" && $answer2 != "" ]]
 				then
