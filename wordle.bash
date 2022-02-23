@@ -6,7 +6,7 @@ DICTIONARY=words_scrabble
 
 function _result {
 	echo ""
-	sort -R $PATH_SRC/word | head -n20
+	sort -R $PATH_SRC/word | head -n20 
 	echo ""
 	< $PATH_SRC/word wc -w
 	echo ""
@@ -115,14 +115,16 @@ function _menu {
 				read -p " [Input] e.g. lieus : " answer
 				while [[ "$answer" =~ [^a-zA-Z] || -z "$answer" ]]
 				do        
-				   	echo "Input only alphabet characters"     
+					_result
+				   	echo " Input only alphabet characters"     
 				   	   
 					read -p " [Input] e.g. lieus : " answer
 				done
 
 				while [[ ${#answer} -gt $length || ${#answer} -lt $length ]]
 				do        
-				   	echo "Input only $length length"     
+					_result
+				   	echo " Input only $length length"     
 				   	   
 					read -p " [Input] e.g. lieus : " answer
 				done
@@ -130,21 +132,23 @@ function _menu {
 				read -p " [Color] e.g. 01000 : " answer2
 				while [[ "$answer2" =~ [^012] || -z "$answer2" ]]
 				do        
-				   	echo "Input only number characters 0 to 2"     
+					_result
+				   	echo " Input only number characters 0 to 2"     
 				   	   
 					read -p " [Color] e.g. 01000 : " answer2
 				done
 
 				while [[ ${#answer2} -gt $length || ${#answer2} -lt $length ]]
 				do        
-				   	echo "Input only $length length"     
+					_result
+				   	echo " Input only $length length"     
 				   	   
 					read -p " [Color] e.g. 01000 : " answer2
 				done
 
 				if [[ $answer != "" && $answer2 == "22222" ]]
 				then
-					echo "You're the man!"
+					echo " You're the man!"
 					exit
 				fi
 
