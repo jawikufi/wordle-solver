@@ -71,6 +71,7 @@ function _menu {
 
 			touch $PATH_SRC/word
 			touch $PATH_SRC/word2
+			touch $PATH_SRC/wordle.save
 			grep "^$pattern$" $PATH_SRC/$DICTIONARY > $PATH_SRC/word
 
 			clear
@@ -145,6 +146,8 @@ function _menu {
 				   	   
 					read -p " [Color $x] e.g. 01000 : " answer2
 				done
+
+				echo "$answer $answer2" >> $PATH_SRC/wordle.save
 
 				if [[ $answer != "" && $answer2 == "22222" ]]
 				then
@@ -272,4 +275,5 @@ function _menu {
 }
 
 clear
+echo " " >> $PATH_SRC/wordle.save
 _menu
